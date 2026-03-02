@@ -12,7 +12,7 @@ const MyParcels = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: parcels = [] } = useQuery({
+    const { data: parcels = [], refetch } = useQuery({
         queryKey: ['myParcels', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/parcels?email=${user.email}`)
@@ -32,11 +32,26 @@ const MyParcels = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Swal.fire({
-                //     title: "Deleted!",
-                //     text: "Your file has been deleted.",
-                //     icon: "success"
-                // });
+
+
+                axiosSecure.delete(`/parcels/${id}`)
+                    .then(res => {
+                        console.log(res.data);
+
+                        if (res.data.deletedCount) {
+                            //refetch the  data in the ui -->
+                            
+                            refetch();
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your parcel Request has been deleted.",
+                                icon: "success"
+                            });
+                        }
+
+                    })
+
+
             }
         });
     }
