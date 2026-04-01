@@ -1,22 +1,24 @@
 import { createBrowserRouter } from "react-router";
-import RootLayout from "../layouts/RootLayout";
-import Home from "../pages/Home/Home/Home";
-import Coverage from "../pages/Coverage/Coverage";
-import AboutUs from "../pages/AboutUs/AboutUs";
-import BeARider from "../pages/BeARider/BeARider";
-import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import AuthLayout from "../layouts/AuthLayout";
+import DashboardLayout from "../layouts/DashboardLayout";
+import RootLayout from "../layouts/RootLayout";
+import AboutUs from "../pages/AboutUs/AboutUs";
+import Admin from "../pages/Admin/Admin";
 import Login from "../pages/Auth/Login/Login";
 import Register from "../pages/Auth/register/register";
-import Rider from "../pages/Rider/Rider";
-import PrivateRoute from "./PrivateRoute";
-import SendParcel from "../pages/SendParcel/SendParcel";
-import DashboardLayout from "../layouts/DashboardLayout";
+import BeARider from "../pages/BeARider/BeARider";
+import Coverage from "../pages/Coverage/Coverage";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import Payment from "../pages/Dashboard/Payment/Payment";
-import PaymentSuccess from "../pages/Dashboard/Payment/PaymentSuccess";
 import PaymentCancelled from "../pages/Dashboard/Payment/PaymentCancelled";
+import PaymentSuccess from "../pages/Dashboard/Payment/PaymentSuccess";
 import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import Home from "../pages/Home/Home/Home";
+import Rider from "../pages/Rider/Rider";
+import SendParcel from "../pages/SendParcel/SendParcel";
+import AdminRoute from "./AdminRoute";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
     {
@@ -90,6 +92,10 @@ export const router = createBrowserRouter([
             {
                 path: 'payment-cancelled',
                 element: <PaymentCancelled></PaymentCancelled>
+            },
+            {
+                path: 'admin',
+                element: <AdminRoute> <Admin></Admin> </AdminRoute>
             }
         ]
     }

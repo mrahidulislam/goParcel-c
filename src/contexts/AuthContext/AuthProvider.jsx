@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { AuthContext } from './AuthContext';
+import axios from 'axios';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import { auth } from '../../firebase/firebase.init';
+import { AuthContext } from './AuthContext';
 
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({children}) => {
 
     const[ user, setUser ] = useState( null );
-    const [ loading, setLoading ] = useState( true )
+    const [ loading, setLoading ] = useState( true );
+    const [ role, setRole ] = useState( null );
 
     const registerUser = ( email, password ) => {
         setLoading( true );
@@ -47,6 +49,22 @@ const AuthProvider = ({children}) => {
 
     }, [])
 
+    // FETCH USER ROLE
+    useEffect(() => {
+        if (user?.email) {
+            axios.get(`http://localhost:3000/users/role/${user.email}`)
+                .then(res => {
+                    setRole(res.data.role);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setRole('user'); // default to user
+                })
+        } else {
+            setRole(null);
+        }
+    }, [user])
+
     const authInfo = {
         user,
         loading,
@@ -55,6 +73,8 @@ const AuthProvider = ({children}) => {
         signInGoogle,
         logOut,
         updateUserProfile,
+        role,
+        isAdmin: role === 'admin'
         
 
         
