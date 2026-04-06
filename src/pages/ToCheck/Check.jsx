@@ -9,3 +9,4 @@ const Check = () => {
 };
 
 export default Check;
+//Admin Accept or Reject a Rider Profile Request
