@@ -1,14 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { CiEdit } from 'react-icons/ci';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { FaMagnifyingGlass } from 'react-icons/fa6';
-import Swal from 'sweetalert2';
+import React from 'react';
 import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { CiEdit } from 'react-icons/ci';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { Link } from 'react-router';
 
 const MyParcels = () => {
 
-    const { user, role } = useAuth();
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
     const { data: parcels = [], refetch } = useQuery({
@@ -17,30 +19,6 @@ const MyParcels = () => {
             const res = await axiosSecure.get(`/parcels?email=${user.email}`)
             return res.data;
         }
-    })
-
-    const { data: earnings = {} } = useQuery({
-        queryKey: ['riderEarnings', user?.email],
-        queryFn: async () => {
-            if (role === 'rider') {
-                const res = await axiosSecure.get(`/rider/earnings/${user.email}`)
-                return res.data;
-            }
-            return {};
-        },
-        enabled: role === 'rider'
-    })
-
-    const { data: flaggedParcels = [] } = useQuery({
-        queryKey: ['flaggedParcels'],
-        queryFn: async () => {
-            if (role === 'admin') {
-                const res = await axiosSecure.get('/parcels/flagged')
-                return res.data;
-            }
-            return [];
-        },
-        enabled: role === 'admin'
     })
 
     const handleParcelDelete = id => {
@@ -94,21 +72,6 @@ const MyParcels = () => {
 
     return (
         <div>
-            {role === 'rider' && (
-                <div className="mb-4 p-4 bg-blue-100 rounded">
-                    <h3>Rider Earnings</h3>
-                    <p>Total Earnings: ${earnings.totalEarnings || 0}</p>
-                    <p>Total Deliveries: {earnings.totalDeliveries || 0}</p>
-                </div>
-            )}
-            {role === 'admin' && flaggedParcels.length > 0 && (
-                <div className="mb-4 p-4 bg-red-100 rounded">
-                    <h3>Flagged Parcels for Review</h3>
-                    <ul>
-                        {flaggedParcels.map(p => <li key={p._id}>{p.parcelName} - {p.senderEmail}</li>)}
-                    </ul>
-                </div>
-            )}
             <h2>All Of My Parcels : {parcels.length} </h2>
             <div className="overflow-x-auto">
                 <table className="table table-zebra">

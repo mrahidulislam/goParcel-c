@@ -1,16 +1,14 @@
-import axios from 'axios';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
-import { useEffect, useState } from 'react';
-import { auth } from '../../firebase/firebase.init';
+import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { auth } from '../../firebase/firebase.init';
 
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({children}) => {
 
     const[ user, setUser ] = useState( null );
-    const [ loading, setLoading ] = useState( true );
-    const [ role, setRole ] = useState( null );
+    const [ loading, setLoading ] = useState( true )
 
     const registerUser = ( email, password ) => {
         setLoading( true );
@@ -39,21 +37,8 @@ const AuthProvider = ({children}) => {
     // OBSERVE USER STATE -->
 
     useEffect(( ) => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
-            if (currentUser) {
-                // Fetch user role
-                const token = await currentUser.getIdToken();
-                axios.get('http://localhost:3000/user/me', {
-                    headers: {
-                        authorization: `Bearer ${token}`
-                    }
-                })
-                .then(res => setRole(res.data.role))
-                .catch(err => console.log(err));
-            } else {
-                setRole(null);
-            }
             setLoading( false );
         })
         return () => {
@@ -65,7 +50,6 @@ const AuthProvider = ({children}) => {
     const authInfo = {
         user,
         loading,
-        role,
         registerUser,
         signInUser,
         signInGoogle,
@@ -77,9 +61,9 @@ const AuthProvider = ({children}) => {
     }
 
     return (
-        <AuthContext.Provider value={authInfo}>
+        <AuthContext value={authInfo}>
             {children}
-        </AuthContext.Provider>
+        </AuthContext>
     );
 };
 

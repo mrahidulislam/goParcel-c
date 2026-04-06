@@ -1,6 +1,7 @@
-import React, { use  } from 'react';
+import { use } from 'react';
 import { AuthContext } from '../contexts/AuthContext/AuthContext';
 
+// Custom hook for authentication
 const useAuth = () => {
 
     const authInfo = use(AuthContext)

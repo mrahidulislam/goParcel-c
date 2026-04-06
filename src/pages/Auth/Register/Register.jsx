@@ -1,8 +1,9 @@
-import axios from 'axios';
+import React from 'react';
 import { useForm } from 'react-hook-form';
-import { NavLink, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
+import { NavLink, useLocation, useNavigate } from 'react-router';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import axios from 'axios';
 
 const Register = () => {
 
@@ -42,20 +43,7 @@ const Register = () => {
                         updateUserProfile( userProfile )
                             .then( () => {
                                 console.log('user Profile Updated Done!');
-
-                                // Save user to DB
-                                const userData = {
-                                    email: data.email,
-                                    role: data.role,
-                                    name: data.name,
-                                    photoURL: res.data.data.url
-                                };
-                                axios.post('http://localhost:3000/users', userData)
-                                    .then(() => {
-                                        navigate( location.state || '/' );
-                                    })
-                                    .catch(error => console.log(error));
-
+                                navigate( location.state || '/' );
                             })
                             .catch ( error => 
                                 console.log(error)
@@ -115,19 +103,6 @@ const Register = () => {
 
                     {errors.email?.type === 'required'
                         && <p className='text-red-500'> Email Is Required. </p>
-                    }
-
-                    {/* ROLE FIELD */}
-                    <label className="label">Role</label>
-                    <select {...register('role', { required: true })} className="select">
-                        <option value="">Select Role</option>
-                        <option value="customer">Customer</option>
-                        <option value="rider">Rider</option>
-                        <option value="admin">Admin</option>
-                    </select>
-
-                    {errors.role?.type === 'required'
-                        && <p className='text-red-500'> Role Is Required. </p>
                     }
 
                     {/* PASSWORD FIELD...... */}
